@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: s3-event-logger
+  labels:
+    app: s3-event-logger
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: s3-event-logger
+  template:
+    metadata:
+      labels:
+        app: s3-event-logger
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - args:
+          - /s3-event-logger
+          image: docker.io/mwennrich/s3-event-logger:latest
+          name: s3-event-logger
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+          ports:
+          - containerPort: 5001
+            name: http
